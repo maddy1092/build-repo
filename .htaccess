@@ -1,0 +1,32 @@
+<IfModule mod_rewrite.c>
+
+RewriteEngine on
+RewriteBase /
+
+# Rewrite rules to ensure backward compatibility for backend API
+RewriteRule "^api/user/?(.*)" "${BACKEND_PREFIX}/api/user/$1" [PT]
+RewriteRule "^pos/crt/?(.*)" "${BACKEND_PREFIX}/pos/crt/$1" [PT]
+RewriteRule "^pos/(d|b)/crt/?(.*)" "${BACKEND_PREFIX}/pos/$1/crt/$2" [PT]
+RewriteRule "^.well-known/apple-developer-merchantid-domain-association.txt" "${BACKEND_PREFIX}/.well-known/apple-developer-merchantid-domain-association.txt" [PT]
+RewriteRule "^pbl/disclose-data/?(.*)" "${BACKEND_PREFIX}/pbl/disclose-data$1" [PT]
+RewriteRule "^pbl/get-disclosed-data/?(.*)" "${BACKEND_PREFIX}/pbl/get-disclosed-data$1" [PT]
+RewriteRule "^cs/(.*)" "${BACKEND_PREFIX}/cs/$1" [PT]
+RewriteRule "^spf/(.*)" "${BACKEND_PREFIX}/spf/$1" [PT]
+RewriteRule "^rq/(.*)" "${BACKEND_PREFIX}/r/rq/$1" [PT]
+RewriteRule "^rqs/(.*)" "${BACKEND_PREFIX}/r/rqs/$1" [PT]
+RewriteRule "^gw/dispatch/(.*)" "${BACKEND_PREFIX}/gw/legacy-dispatch/$1" [PT]
+RewriteRule "^(en|ar)/catalogue/product-detail/(.*)" "${BACKEND_PREFIX}/$1/catalogue/product-detail/$2" [PT]
+RedirectMatch "/(en|ar)/product-detail/(.*)" "/$1/catalogue/product-detail/$2"
+RedirectMatch "/(en|ar)/product-list" "/$1/catalogue/product-list"
+
+# Basic settings
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header set Cache-Control "max-age=900, public"
+</IfModule>
